@@ -1,15 +1,15 @@
-# sura-features
-
 This repository contains code utility files to extract features from suras of the Qur'an based on the words and themes that occur in them.
 
 # Introduction
 
 The question of whether the ordering of suras in the Qur'an is divinely ordained or arises out of a consensus of the Companions has been debated over the centuries. There are two main ways this question has been approached: 
 
-- Extrinsically or textually/historically: Through Qur'anic or hadith evidence for a specific ordering. There does not appear to be slam-dunk evidence for either side, unfortunately.
-- Intrinsically: Through showing that a particular ordering has an obvious, compelling eloquence and self-consistency to it, i.e. the "proof is in the pudding." Scholars such as Farahi and Islahi have presented arguments for divine ordainment based on ideas of نظم ("coherence"). 
+- Extrinsically or textually/historically: Through Qur'anic or hadith evidence. There does not appear to be slam-dunk evidence for either side, unfortunately.
+- Intrinsically: Through showing that a particular ordering has an obvious, compelling eloquence and self-consistency to it, i.e. the "proof is in the pudding."  Imam ash-Shafi`i has a statement similar to this _[citation needed]_. Later scholars such as Farahi and Islahi have presented [arguments for divine ordainment based on ideas of نظم ("coherence")](https://archive.org/download/CoherenceInTheQuranMustansirMir/Coherence%20in%20the%20Quran%20-%20Mustansir%20Mir.pdf).
 
-We propose a computational method to explore this question combining elements from both approaches. Specifically, we propose ways to quantify the "self-consistency" or "coherence" of an ordering of suras. This will allow us to not only assert the remarkable coherence within a particular ordering, but to also assert "less" coherence in other orderings. Finally, we can use textual/historical evidence to validate these measures of ordering coherence.
+We propose a computational method to explore this question combining elements from both approaches. Specifically, we propose ways to quantify the "self-consistency" or "coherence" of an ordering of suras. This will allow us to not only assert the remarkable coherence within a particular ordering, but to also assert "less" coherence in other orderings with respect to that measure. Finally, we can use textual/historical evidence to validate these measures of ordering coherence.
+
+This code package enables experimentation with different feature sets to explore how sensitive orderings are to features and choice of feature sets. We do not claim to definitively answer the question; this work simply provides a tool for exploration and quantification. For different choices (and subsets) of features sets and sura-pair connectedness measures we can check the stability of the orderings they induce. The best case outcome would be a highly stable ordering that is robust to minor to moderate changes in features and measures.
 
 # Approach
 
@@ -47,7 +47,8 @@ By topic in the list below, we mean theme, or subject, or _`amud_ (as in the Far
 
    - Does the sura have a complete/partial structure? e.g. chiastic, etc. (Categorical)
    - Does the sura have notable rhyming characteristics in its recitation?
-   - Are there any notable audial or tajwid characteristics of the sura?
+   - Are there any notable audial or tajwid characteristics of the sura? 
+   - What is the distribution of light, heavy, and qalqala letters for the endings of each aya?
    - What are the top _k_ topics in the sura and their distribution? (topics include items like story of a Prophet or a past nation, laws, janna, nar, etc.)
    - What is the noun/verb/particle distribution of the sura?
    - How does the sura begin? Syntax: With disconnected letters or _hamd_ or _tasbih_ or something else? Semantics: What topic does it open with?
@@ -78,7 +79,7 @@ Once we have computed all pairwise connectedness scores between the suras and ha
 
 ## Subjectivity
 
-The choice of features and any implicit/explicit feature weighting in the final connectedness measure, of course, is quite subjective. It is possible that different feature sets corresponding to different notions of connectedness (or even a different concept) will prefer different orderings. This code package allows experimentation with different feature sets to explore how sensitive orderings are to features and choice of feature sets. We do not claim to definitively answer the question; this work simply provides a tool for exploration and quantification.
+The choice of features and any implicit/explicit feature weighting in the final connectedness measure, of course, is quite subjective. It is possible that different feature sets corresponding to different notions of connectedness (or even a different concept) will prefer different orderings. It is also possible that the "best" ordering is relatively robust to choice of feature set and weighting.
 
 # Related Work
 
