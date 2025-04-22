@@ -13,7 +13,7 @@ We propose a computational method to explore this question combining elements fr
 
 # Approach
 
-Our approach to defining self-consistency or coherence of a sura ordering centers around decomposing an ordering into an ordered set of sura pairs, and summing a "connectedness" measure for each pair in the set. For each pair of suras, we measure "connectedness" by analyzing their similarity and complementarity, on both syntactic and semantic levels. These are purely structural, word-based, and theme-based measures; there is no numerology involved.
+Our approach to defining self-consistency or coherence of a sura ordering centers around decomposing an ordering into a set of sura pairs, and summing a "connectedness" measure for each pair in the set. For each pair of suras, we measure "connectedness" by analyzing their similarity and complementarity, on both syntactic and semantic levels. These are purely structural, word-based, and theme-based measures; there is no numerology involved.
 
 For example, take Surat al-Isra' and Surat al-Kahf. In terms of aya length, they are one aya apart (111 vs 110) and in terms of page/line length they are ~5 lines apart. Each contains an aya about the refusal of Iblis to prostrate, about the examples detailed in the Qur'an, and other similar ayat. Thematically one opens addressing the Bani Isra'il and the other opens addressing Christians (complementarity). These, and others, will contribute to the final connectedness score of this pair of suras. We propose to define and compute this measure for all 114*113/2 = 6,441 pairs of suras.
 
@@ -24,7 +24,7 @@ In order to be as objective as possible, we define broad justifiable "classes" o
 
 ### Connectedness: Similarity and Complementarity
 
-In coming up with a measure to define how connected a pair of suras are, we are looking for deep structural connections, beyond superficial similarities. For this reason, we include measures of _complementarity_ in connectedness. For example, if Sura 1 has an 80-20 distribution of ayat related to janna and nar, and Sura 2 has a 20-80 distribution, we take that as strong evidence of abstract, structural similarity between the two. Our measure of connectedness subsumes both similarity and complementarity.
+In coming up with a measure to define how connected a pair of suras are, we are looking for **deep structural connections**, beyond superficial similarities. For this reason, we include measures of _complementarity_ in connectedness. For example, if Sura 1 has an 80-20 distribution of ayat related to janna and nar, and Sura 2 has a 20-80 distribution, we take that as strong evidence of abstract, structural similarity between the two. Our measure of connectedness subsumes both similarity and complementarity.
 
 ## Features
 
@@ -38,7 +38,7 @@ For each sura, we will extract three types of features: one set based on aggrega
 
    - Number of words/ayas/lines in the sura
    - Mean and media aya length
-   - Average word IDF and sum of top _k_ IDF values
+   - Average [word IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) and sum of top _k_ IDF values
    - Categories of top _k_ IDF value words (e.g. are they verbs, names of places, Prophets, etc.). The idea is to capture features of a sura that are unique to only it and few others.
 
 2. Structural and thematic features:  
@@ -48,27 +48,30 @@ By topic in the list below, we mean theme, or subject, or _`amud_ (as in the Far
    - What are the top _k_ topics in the sura and their distribution? (topics include items like story of a Prophet or a past nation, laws, janna, nar, etc.)
    - What is the noun/verb/particle distribution of the sura?
    - How does the sura begin? Syntax: With disconnected letters or _hamd_ or _tasbih_ or something else? Semantics: What topic does it open with?
-   - Other structural features that are relatively unique to the sura, e.g. does it have an oft-repeated phrase like Surat al-Rahman and Surat al-Qamar?
+   - Other structural features that are relatively unique to the sura, e.g. does it have an oft-repeated phrase like in Surat al-Rahman and Surat al-Qamar?
 
-3. Bag-of-word features: We will use inverse document frequency (IDF) features to represent a sura as a set of its constituent _unordered_ n-grams (n=1-3). We will collapse synonyms and words of the same root into one. This will quickly surface similar words/phrases that occur that sura and only in a few others.
+3. Bag-of-word features: We will use [inverse document frequency (IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features to represent a sura as a set of its constituent _unordered_ n-grams (n=1,2,3). We will collapse synonyms and words of the same root into one. This will quickly surface similar words/phrases that occur that sura and only in a few others.
 
-See the Appendix for a complete list of sura features.
+See the Appendix for a complete list of sura features (TBD).
 
 ### Pair Features
 
 For each _pair_ of suras we will compute values for the following components of connectedness and aggregate them into a final scalar value representing a custom connectedness measure that is derived from each sura's features.
 
- - A symmetric probability divergence measure between topic distributions. This may need to be customized to handle complementarity (janna and nar, or brevity and detail on the same topic, for example).
+ - Similarity of aggregate statistics
+ - Similarity of structural features
+ - Similarity of bag-of-word features
+ - A symmetric probability divergence measure between topic distributions and other distributions that are part of sura features. This may need to be customized to handle complementarity (janna and nar, or brevity and detail on the same topic, for example).
  - Are the beginning and ending topics similar/complementary?
  - Are the beginnings of the two suras similar or complementary or neither (in syntax and in meaning)? 
 
 # Validation
 
-We can "validate" a feature set by treating groups of suras that we know to be connected to each other through textual/historical evidence as "test sets." For example, the Prophet (saws) spoke of "Hūd and her sisters" as a group of suras similar to one another. Similarly we know that the Prophet (saws) repeatedly recited certain pairs/groups of suras together. We also have suras confirmed to be revealed in the Makkan and Madinan periods of the sira. For each such group, we take a feature set as valid if in-group connectedness is higher than out-group connectedness.
+We can "validate" a feature set by treating groups of suras that we know to be connected to each other through textual/historical evidence as "test sets." For example, the Prophet (saws) spoke of "Hūd and her sisters" as a group of suras similar to one another. Similarly we know that the Prophet (saws) repeatedly recited certain pairs/groups of suras together. We also have suras confirmed to be revealed in the Makkan and Madinan periods of the sira. For each such group, a measure of that validity of a feature set is how well it separates in-group connectedness from out-group connectedness measures.
 
 # Putting it all together
 
-Once we have computed all pairwise connectedness scores between the suras and have a 114x114 matrix of values, finding the most connected ordering reduces to the Traveling Salesman Problem, i.e. finding the weighted longest path in a fully connected graph.
+Once we have computed all pairwise connectedness scores between the suras and have a 114x114 matrix of values, finding the most connected ordering reduces to finding the weighted longest path in a fully connected graph, which is equivalent to the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem), an [NP-hard](https://en.wikipedia.org/wiki/NP-hardness) problem.
 
 ## Subjectivity
 
