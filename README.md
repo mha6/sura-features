@@ -32,25 +32,28 @@ In order to compute pair connectedness scores, we need to define an objective wa
 
 ### Sura Features
 
-For each sura, we will extract three types of features: one set based on aggregate numerical statistics like word/aya/line count, another based on existence/absence of structural and thematic characteristics, and the last based on word occurrence and frequency in that sura as well as the rest of the Qur'an. We therefore envision a long, sparse vector as representing a sura, with three parts:
+For each sura, we will extract three types of features: one set based on aggregate numerical statistics like word/aya/line count, another based on existence/absence of structural, audial, and thematic characteristics, and the last based on word occurrence and frequency in that sura as well as the rest of the Qur'an. We therefore envision a long, sparse vector as representing a sura, with three parts:
 
 1. Aggregate numerical statistics:
 
    - Number of words/ayas/lines in the sura
-   - Mean and media aya length
+   - Mean and median aya length in terms of words
+   - Length distribution of ayat (bucketized?)
    - Average [word IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) and sum of top _k_ IDF values
    - Categories of top _k_ IDF value words (e.g. are they verbs, names of places, Prophets, etc.). The idea is to capture features of a sura that are unique to only it and few others.
 
-2. Structural and thematic features:  
+2. Structural, audial, and thematic features:  
 By topic in the list below, we mean theme, or subject, or _`amud_ (as in the Farahi/Islahi terminology).
 
    - Does the sura have a complete/partial structure? e.g. chiastic, etc. (Categorical)
+   - Does the sura have notable rhyming characteristics in its recitation?
+   - Are there any notable audial or tajwid characteristics of the sura?
    - What are the top _k_ topics in the sura and their distribution? (topics include items like story of a Prophet or a past nation, laws, janna, nar, etc.)
    - What is the noun/verb/particle distribution of the sura?
    - How does the sura begin? Syntax: With disconnected letters or _hamd_ or _tasbih_ or something else? Semantics: What topic does it open with?
    - Other structural features that are relatively unique to the sura, e.g. does it have an oft-repeated phrase like in Surat al-Rahman and Surat al-Qamar?
 
-3. Bag-of-word features: We will use [inverse document frequency (IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features to represent a sura as a set of its constituent _unordered_ n-grams (n=1,2,3). We will collapse synonyms and words of the same root into one. This will quickly surface similar words/phrases that occur that sura and only in a few others.
+3. Bag-of-word features: We will use [inverse document frequency (IDF)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features to represent a sura as a set of its constituent _unordered_ n-grams (n=1,2,3). We will collapse synonyms and words of the same root into one. This will quickly surface similar words/phrases (_mutashabihat_) that occur in that sura and possibly in a few others only.
 
 See the Appendix for a complete list of sura features (TBD).
 
