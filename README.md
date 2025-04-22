@@ -32,13 +32,47 @@ In order to compute pair connectedness scores, we need to define an objective wa
 
 ### Sura Features
 
-For each sura, we will extract two types of features: one set based on aggregate numerical statistics like word/aya/line count and another based on existence/absence of structural and thematic characteristics. See the Appendix for a complete list of sura features.
+For each sura, we will extract three types of features: one set based on aggregate numerical statistics like word/aya/line count, another based on existence/absence of structural and thematic characteristics, and the last based on word occurrence and frequency in that sura as well as the rest of the Qur'an. We therefore envision a long, sparse vector as representing a sura, with three parts:
+
+1. Aggregate numerical statistics:
+
+   - Number of words/ayas/lines in the sura
+   - Mean and media aya length
+   - Average word IDF and sum of top _k_ IDF values
+   - Categories of top _k_ IDF value words (e.g. are they verbs, names of places, Prophets, etc.). The idea is to capture features of a sura that are unique to only it and few others.
+
+2. Structural and thematic features:  
+By topic in the list below, we mean theme, or subject, or _`amud_ (as in the Farahi/Islahi terminology).
+
+   - Does the sura have a complete/partial structure? e.g. chiastic, etc. (Categorical)
+   - What are the top _k_ topics in the sura and their distribution? (topics include items like story of a Prophet or a past nation, laws, janna, nar, etc.)
+   - What is the noun/verb/particle distribution of the sura?
+   - How does the sura begin? Syntax: With disconnected letters or _hamd_ or _tasbih_ or something else? Semantics: What topic does it open with?
+   - Other structural features that are relatively unique to the sura, e.g. does it have an oft-repeated phrase like Surat al-Rahman and Surat al-Qamar?
+
+3. Bag-of-word features: We will use inverse document frequency (IDF) features to represent a sura as a set of its constituent _unordered_ n-grams (n=1-3). We will collapse synonyms and words of the same root into one. This will quickly surface similar words/phrases that occur that sura and only in a few others.
+
+See the Appendix for a complete list of sura features.
 
 ### Pair Features
+
+For each _pair_ of suras we will compute values for the following components of connectedness and aggregate them into a final scalar value representing a custom connectedness measure that is derived from each sura's features.
+
+ - A symmetric probability divergence measure between topic distributions. This may need to be customized to handle complementarity (janna and nar, or brevity and detail on the same topic, for example).
+ - Are the beginning and ending topics similar/complementary?
+ - Are the beginnings of the two suras similar or complementary or neither (in syntax and in meaning)? 
 
 # Validation
 
 We can "validate" a feature set by treating groups of suras that we know to be connected to each other through textual/historical evidence as "test sets." For example, the Prophet (saws) spoke of "Hūd and her sisters" as a group of suras similar to one another. Similarly we know that the Prophet (saws) repeatedly recited certain pairs/groups of suras together. We also have suras confirmed to be revealed in the Makkan and Madinan periods of the sira. For each such group, we take a feature set as valid if in-group connectedness is higher than out-group connectedness.
+
+# Putting it all together
+
+Once we have computed all pairwise connectedness scores between the suras and have a 114x114 matrix of values, finding the most connected ordering reduces to the Traveling Salesman Problem, i.e. finding the weighted longest path in a fully connected graph.
+
+## Subjectivity
+
+The choice of features and any implicit/explicit feature weighting in the final connectedness measure, of course, is quite subjective. It is possible that different feature sets corresponding to different notions of connectedness (or even a different concept) will prefer different orderings. This code package allows experimentation with different feature sets to explore how sensitive orderings are to features and choice of feature sets. We do not claim to definitively answer the question; this work simply provides a tool for exploration and quantification.
 
 # Related Work
 
@@ -55,22 +89,4 @@ The main differences of this approach with the نظم ideas proposed by Farahi a
 
 ## Sura Features
 
-Structure - e.g. chiastic
-
-IDF Features, n-grams (unordered, synonyms)
-
-unique features of each sura (high IDF words/names).  Sum of top 5 or average word uniquness?
-
-Mean/median aya length
-
-Repeated phrases (Qamar, Rahman, etc.)
-
 ## Sura pair features
-
-Complementarity (e.g. in the topics themselves, or in brevity vs detail) in themes/subjects/`amud
-
-Word distribution kl divergence 
-
-End and beginning match (theme)? 
-
-Beginning match. Letters or phrases similarity. 
